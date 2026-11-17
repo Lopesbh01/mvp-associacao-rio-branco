@@ -2,6 +2,23 @@
 
 Aplicação web responsiva para registrar, organizar e acompanhar solicitações recebidas pela Associação Comunitária do Bairro Rio Branco. O projeto implementa o MVP definido no planejamento: autenticação, cadastro, consulta, filtros, prioridade, atribuição de responsável, atualização de situação e histórico de alterações.
 
+## Histórico de evolução do projeto
+
+O MVP da Associação Comunitária do Bairro Rio Branco foi desenvolvido
+em etapas, com versionamento das alterações por meio do Git e publicação
+no GitHub.
+
+As entregas contemplam:
+
+- Estrutura inicial da aplicação.
+- Preparação para publicação e versionamento.
+- Ajustes nos testes automatizados das solicitações.
+- Configuração dos arquivos estáticos.
+- Melhorias na visualização dos detalhes e do histórico das solicitações.
+
+O projeto utiliza Django e tem como objetivo apoiar o registro,
+acompanhamento e organização das demandas apresentadas pelos moradores.
+
 ## 1. Tecnologias e arquitetura
 
 - Python 3.12
