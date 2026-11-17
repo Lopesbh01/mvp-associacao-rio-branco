@@ -1,10 +1,157 @@
-{% extends 'base.html' %}
-{% block title %}Solicitação #{{ solicitacao.pk }} | Associação Comunitária{% endblock %}
-{% block page_heading %}Detalhes da solicitação{% endblock %}
-{% block content %}
-<div class="breadcrumb-line"><a href="{% url 'inicio' %}">Início</a><i class="bi bi-chevron-right"></i><a href="{% url 'consultar_solicitacoes' %}">Consultar solicitações</a><i class="bi bi-chevron-right"></i><span>#{{ solicitacao.pk|stringformat:'04d' }}</span></div>
-<div class="detail-heading"><div><span class="eyebrow">REGISTRO #{{ solicitacao.pk|stringformat:'04d' }}</span><h2>{{ solicitacao.descricao|truncatechars:90 }}</h2><p>Cadastrada em {{ solicitacao.data_registro|date:'d/m/Y \à\s H:i' }}</p></div><a class="btn btn-light" href="{% url 'consultar_solicitacoes' %}"><i class="bi bi-arrow-left me-2"></i>Voltar à lista</a></div>
-<div class="row g-4"><div class="col-lg-7"><div class="panel-card detail-card"><h3>Informações da solicitação</h3><div class="detail-grid"><div><span>Solicitante</span><strong>{{ solicitacao.nome_solicitante }}</strong></div><div><span>Contato</span><strong>{{ solicitacao.contato_solicitante }}</strong></div><div><span>Categoria</span><strong>{{ solicitacao.categoria.nome }}</strong></div><div><span>Prioridade</span><strong><span class="priority priority-{{ solicitacao.prioridade }}">{{ solicitacao.get_prioridade_display }}</span></strong></div><div><span>Responsável</span><strong>{{ solicitacao.responsavel.get_full_name|default:solicitacao.responsavel.username|default:'A definir' }}</strong></div><div><span>Situação atual</span><strong><span class="status status-{{ solicitacao.status }}"><span class="status-dot"></span>{{ solicitacao.get_status_display }}</span></strong></div></div><hr class="soft-divider"><h4>Descrição</h4><p class="description-text">{{ solicitacao.descricao|linebreaksbr }}</p><p class="muted small mb-0">Registrada por {{ solicitacao.usuario_registro.get_full_name|default:solicitacao.usuario_registro.username }}</p></div>
-<div class="panel-card detail-card mt-4"><h3><i class="bi bi-clock-history me-2"></i>Histórico de alterações</h3><div class="timeline">{% for registro in historicos %}<div class="timeline-item"><span class="timeline-dot"></span><div><strong>{{ registro.acao }}</strong><small>{{ registro.data_alteracao|date:'d/m/Y H:i' }} · {{ registro.usuario.get_full_name|default:registro.usuario.username }}</small>{% if registro.status_anterior or registro.status_novo %}<p>{{ registro.get_status_anterior_display|default:registro.status_anterior }}{% if registro.status_novo %} → {{ registro.get_status_novo_display|default:registro.status_novo }}{% endif %}</p>{% endif %}{% if registro.observacao %}<p>{{ registro.observacao }}</p>{% endif %}</div></div>{% empty %}<p class="muted">Ainda não há alterações registradas.</p>{% endfor %}</div></div></div>
-<div class="col-lg-5"><div class="panel-card detail-card" id="atualizar-situacao"><h3>Atualizar situação</h3><p class="muted">Toda alteração será registrada automaticamente no histórico.</p><form method="post" action="{% url 'atualizar_status' solicitacao.pk %}">{% csrf_token %}<label class="form-label" for="id_status">Nova situação</label>{{ status_form.status }}<div class="mt-3"><label class="form-label" for="id_observacao">Observação (opcional)</label>{{ status_form.observacao }}</div><button class="btn btn-primary w-100 mt-3" type="submit">Salvar atualização</button></form></div><div class="panel-card detail-card mt-3"><h3><i class="bi bi-person-check me-2"></i>Responsável</h3><p class="muted">Atribua ou altere o colaborador encarregado do acompanhamento.</p><form method="post" action="{% url 'atualizar_responsavel' solicitacao.pk %}">{% csrf_token %}<label class="form-label" for="id_responsavel">Colaborador responsável</label>{{ responsavel_form.responsavel }}<button class="btn btn-outline-primary w-100 mt-3" type="submit">Salvar responsável</button></form></div><div class="info-note mt-3"><i class="bi bi-shield-check"></i><span>As alterações ficam associadas ao usuário responsável e à data e hora do registro.</span></div></div></div>
-{% endblock %}
+{% extends 'base.html' %} {% block title %}Solicitação #{{ solicitacao.pk }} |
+Associação Comunitária{% endblock %} {% block page_heading %}Detalhes da
+solicitação{% endblock %} {% block content %}
+<div class="breadcrumb-line">
+  <a href="{% url 'inicio' %}">Início</a><i class="bi bi-chevron-right"></i
+  ><a href="{% url 'consultar_solicitacoes' %}">Consultar solicitações</a
+  ><i class="bi bi-chevron-right"></i
+  ><span>#{{ solicitacao.pk|stringformat:'04d' }}</span>
+</div>
+<div class="detail-heading">
+  <div>
+    <span class="eyebrow"
+      >REGISTRO #{{ solicitacao.pk|stringformat:'04d' }}</span
+    >
+    <h2>{{ solicitacao.descricao|truncatechars:90 }}</h2>
+    <p>Cadastrada em {{ solicitacao.data_registro|date:'d/m/Y \à\s H:i' }}</p>
+  </div>
+  <a class="btn btn-light" href="{% url 'consultar_solicitacoes' %}"
+    ><i class="bi bi-arrow-left me-2"></i>Voltar à lista</a
+  >
+</div>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="panel-card detail-card">
+      <h3>Informações da solicitação</h3>
+      <div class="detail-grid">
+        <div>
+          <span>Solicitante</span
+          ><strong>{{ solicitacao.nome_solicitante }}</strong>
+        </div>
+        <div>
+          <span>Contato</span
+          ><strong>{{ solicitacao.contato_solicitante }}</strong>
+        </div>
+        <div>
+          <span>Categoria</span
+          ><strong>{{ solicitacao.categoria.nome }}</strong>
+        </div>
+        <div>
+          <span>Prioridade</span
+          ><strong
+            ><span class="priority priority-{{ solicitacao.prioridade }}"
+              >{{ solicitacao.get_prioridade_display }}</span
+            ></strong
+          >
+        </div>
+        <div>
+          <span>Responsável</span
+          ><strong
+            >{{
+            solicitacao.responsavel.get_full_name|default:solicitacao.responsavel.username|default:'A
+            definir' }}</strong
+          >
+        </div>
+        <div>
+          <span>Situação atual</span
+          ><strong
+            ><span class="status status-{{ solicitacao.status }}"
+              ><span class="status-dot"></span>{{ solicitacao.get_status_display
+              }}</span
+            ></strong
+          >
+        </div>
+      </div>
+      <hr class="soft-divider" />
+      <h4>Descrição</h4>
+      <p class="description-text">{{ solicitacao.descricao|linebreaksbr }}</p>
+      <p class="muted small mb-0">
+        Registrada por {{
+        solicitacao.usuario_registro.get_full_name|default:solicitacao.usuario_registro.username
+        }}
+      </p>
+    </div>
+    <div class="panel-card detail-card mt-4">
+      <h3><i class="bi bi-clock-history me-2"></i>Histórico de alterações</h3>
+      <div class="timeline">
+        {% for registro in historicos %}
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div>
+            <strong>{{ registro.acao }}</strong>
+            <small>
+              {{ registro.data_alteracao|date:'d/m/Y H:i' }} · {{
+              registro.usuario|default_if_none:"Usuário não identificado" }}
+            </small>
+
+            {% if registro.status_anterior or registro.status_novo %}
+            <p>
+              {{
+              registro.get_status_anterior_display|default:registro.status_anterior
+              }} {% if registro.status_novo %} → {{
+              registro.get_status_novo_display|default:registro.status_novo }}
+              {% endif %}
+            </p>
+            {% endif %} {% if registro.observacao %}
+            <p>{{ registro.observacao }}</p>
+            {% endif %}
+          </div>
+        </div>
+        {% empty %}
+        <p class="muted">Ainda não há alterações registradas.</p>
+        {% endfor %}
+      </div>
+      <div class="col-lg-5">
+        <div class="panel-card detail-card" id="atualizar-situacao">
+          <h3>Atualizar situação</h3>
+          <p class="muted">
+            Toda alteração será registrada automaticamente no histórico.
+          </p>
+          <form
+            method="post"
+            action="{% url 'atualizar_status' solicitacao.pk %}"
+          >
+            {% csrf_token %}<label class="form-label" for="id_status"
+              >Nova situação</label
+            >{{ status_form.status }}
+            <div class="mt-3">
+              <label class="form-label" for="id_observacao"
+                >Observação (opcional)</label
+              >{{ status_form.observacao }}
+            </div>
+            <button class="btn btn-primary w-100 mt-3" type="submit">
+              Salvar atualização
+            </button>
+          </form>
+        </div>
+        <div class="panel-card detail-card mt-3">
+          <h3><i class="bi bi-person-check me-2"></i>Responsável</h3>
+          <p class="muted">
+            Atribua ou altere o colaborador encarregado do acompanhamento.
+          </p>
+          <form
+            method="post"
+            action="{% url 'atualizar_responsavel' solicitacao.pk %}"
+          >
+            {% csrf_token %}<label class="form-label" for="id_responsavel"
+              >Colaborador responsável</label
+            >{{ responsavel_form.responsavel }}<button
+              class="btn btn-outline-primary w-100 mt-3"
+              type="submit"
+            >
+              Salvar responsável
+            </button>
+          </form>
+        </div>
+        <div class="info-note mt-3">
+          <i class="bi bi-shield-check"></i
+          ><span
+            >As alterações ficam associadas ao usuário responsável e à data e
+            hora do registro.</span
+          >
+        </div>
+      </div>
+    </div>
+    {% endblock %}
+  </div>
+</div>
