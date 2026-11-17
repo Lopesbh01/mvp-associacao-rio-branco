@@ -8,7 +8,9 @@ User = get_user_model()
 class FluxoSolicitacaoTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='colaborador', email='colaborador@example.org', password='SenhaSegura-12345')
-        self.categoria = Categoria.objects.create(nome='Iluminação pública')
+        self.categoria, criada = Categoria.objects.get_or_create(
+    nome='Iluminação pública'
+)
 
 
     def test_login_aceita_email_e_senha(self):
