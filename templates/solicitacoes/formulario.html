@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Nova solicitação | Associação Comunitária{% endblock %}
+{% block page_heading %}Nova solicitação{% endblock %}
+{% block content %}
+<div class="breadcrumb-line"><a href="{% url 'inicio' %}">Início</a><i class="bi bi-chevron-right"></i><span>Nova solicitação</span></div>
+<div class="page-intro"><div><h2>Cadastro de solicitação</h2><p>Preencha os dados abaixo para registrar uma demanda apresentada por um morador.</p></div><span class="required-note"><b>*</b> Campos obrigatórios</span></div>
+<form method="post" novalidate>{% csrf_token %}
+  {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+  <div class="panel-card form-panel"><div class="form-section-title"><span class="form-section-icon"><i class="bi bi-person-lines-fill"></i></span><div><h3>Dados do solicitante</h3><p>Informações para identificação e retorno ao morador.</p></div></div>
+    <div class="row g-3"><div class="col-md-6"><label class="form-label" for="id_nome_solicitante">Nome do solicitante <b>*</b></label>{{ form.nome_solicitante }}{% for e in form.nome_solicitante.errors %}<div class="field-error">{{ e }}</div>{% endfor %}</div><div class="col-md-6"><label class="form-label" for="id_contato_solicitante">Contato <b>*</b></label>{{ form.contato_solicitante }}{% for e in form.contato_solicitante.errors %}<div class="field-error">{{ e }}</div>{% endfor %}<div class="form-hint">Telefone ou outro meio de contato para retorno.</div></div></div>
+    <hr class="soft-divider"><div class="form-section-title"><span class="form-section-icon"><i class="bi bi-chat-left-text"></i></span><div><h3>Detalhes da solicitação</h3><p>Descreva a necessidade apresentada.</p></div></div>
+    <div class="mb-3"><label class="form-label" for="id_descricao">Descrição da solicitação <b>*</b></label>{{ form.descricao }}<div class="character-count"><span id="descriptionCount">0</span> / 500</div>{% for e in form.descricao.errors %}<div class="field-error">{{ e }}</div>{% endfor %}</div>
+    <div class="row g-3"><div class="col-md-4"><label class="form-label" for="id_categoria">Categoria <b>*</b></label>{{ form.categoria }}{% for e in form.categoria.errors %}<div class="field-error">{{ e }}</div>{% endfor %}</div><div class="col-md-4"><label class="form-label" for="id_prioridade">Prioridade <b>*</b></label>{{ form.prioridade }}{% for e in form.prioridade.errors %}<div class="field-error">{{ e }}</div>{% endfor %}</div><div class="col-md-4"><label class="form-label" for="id_responsavel">Responsável</label>{{ form.responsavel }}{% for e in form.responsavel.errors %}<div class="field-error">{{ e }}</div>{% endfor %}<div class="form-hint">Selecione o colaborador que acompanhará a demanda.</div></div></div>
+    <div class="info-note mt-4"><i class="bi bi-info-circle"></i><span>Após salvar, a solicitação receberá um identificador único, data de registro e situação inicial <strong>Aberta</strong>.</span></div>
+  </div>
+  <div class="form-actions"><a href="{% url 'inicio' %}" class="btn btn-light">Cancelar</a><button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-2"></i>Salvar solicitação</button></div>
+</form>
+{% endblock %}
